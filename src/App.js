@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Center, ChakraProvider, Divider, HStack, Heading, Input, Spacer, Text, VStack } from '@chakra-ui/react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { DeleteIcon, EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
 
@@ -8,6 +8,19 @@ function App() {
   const [todo, setTodo] = useState('');
   const [todolist, setTodolist] = useState([]);
   const [editTodo, setEditTodo] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  useEffect(() => {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    setTodolist(tasks);
+    setDataLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (dataLoaded) {
+      localStorage.setItem("tasks", JSON.stringify(todolist));
+    }
+  }, [todolist, dataLoaded]);
 
   const clickHandler = () => {
     if (todo !== '') {
